@@ -116,6 +116,7 @@ class _HomePageState extends State<HomePage> {
             return GestureDetector(
               //GestureDetector deixa clicar na imagem
               child: FadeInImage.memoryNetwork(
+                  //FadeInImage em vez de Image... faz a imagem abrir suavimente
                   placeholder: kTransparentImage,
                   image: snapshot.data["data"][index]["images"]["fixed_height"]
                       ["url"],
