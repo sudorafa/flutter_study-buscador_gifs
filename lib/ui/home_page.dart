@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:transparent_image/transparent_image.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -85,5 +86,31 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _createGifTable(BuildContext context, AsyncSnapshot snapshot) {}
+  int _getCount(List data) {
+    if (_search == null) {
+      return data.length;
+    } else {
+      return data.length + 1;
+    }
+  }
+
+  Widget _createGifTable(BuildContext context, AsyncSnapshot snapshot) {
+    return GridView.builder(
+        //.builder para renderizar só o que ta mostrando na tela
+        padding: EdgeInsets.all(10.0),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2, crossAxisSpacing: 10.0, mainAxisSpacing: 10.0),
+        itemCount: _getCount(snapshot.data["data"]),
+        itemBuilder: (context, index) {
+          return GestureDetector(
+              //GestureDetector deixa clicar na imagem
+              child: FadeInImage.memoryNetwork(
+            placeholder: kTransparentImage,
+            image: snapshot.data["data"][index]["images"]["fixed_height"]
+                ["url"],
+            height: 300.0,
+            fit: BoxFit.cover,
+          ));
+        });
+  }
 }
