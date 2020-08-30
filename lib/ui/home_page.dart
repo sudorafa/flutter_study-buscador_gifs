@@ -37,14 +37,15 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.black,
-          title: Image.network(
-              "https://developers.giphy.com/static/img/dev-logo-lg.7404c00322a8.gif"),
-          centerTitle: true,
-        ),
+      appBar: AppBar(
         backgroundColor: Colors.black,
-        body: Column(children: <Widget>[
+        title: Image.network(
+            "https://developers.giphy.com/static/img/dev-logo-lg.7404c00322a8.gif"),
+        centerTitle: true,
+      ),
+      backgroundColor: Colors.black,
+      body: Column(
+        children: <Widget>[
           Padding(
               padding: EdgeInsets.all(10.0),
               child: TextField(
@@ -53,7 +54,36 @@ class _HomePageState extends State<HomePage> {
                       labelStyle: TextStyle(color: Colors.white),
                       border: OutlineInputBorder()),
                   style: TextStyle(color: Colors.white, fontSize: 18.0),
-                  textAlign: TextAlign.center))
-        ]));
+                  textAlign: TextAlign.center)),
+          Expanded(
+            child: FutureBuilder(
+                future: _getGifs(),
+                builder: (context, snapshot) {
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.waiting:
+                    case ConnectionState.none:
+                      return Container(
+                        width: 200.0,
+                        height: 200.0,
+                        alignment: Alignment.center,
+                        child: CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.white),
+                          strokeWidth: 5.0,
+                        ),
+                      );
+                    default:
+                      if (snapshot.hasError)
+                        return Container();
+                      else
+                        return _createGifTable(context, snapshot);
+                  }
+                }),
+          ),
+        ],
+      ),
+    );
   }
+
+  Widget _createGifTable(BuildContext context, AsyncSnapshot snapshot) {}
 }
